@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz zu Becks letzter Sommer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1c1c1c, #3a2a22);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .quiz-box {
+      background: rgba(0, 0, 0, 0.75);
+      max-width: 750px;
+      width: 100%;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #d6c0a8;
+      margin-bottom: 25px;
+    }
+
+    .progress {
+      margin-bottom: 15px;
+      color: #c9a77d;
+      font-weight: bold;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #eee;
+      color: #222;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .answers button:hover {
+      background: #d6c0a8;
+    }
+
+    .correct {
+      background: #4caf50 !important;
+      color: white !important;
+    }
+
+    .wrong {
+      background: #c0392b !important;
+      color: white !important;
+    }
+
+    .next-btn, .restart-btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #c9a77d;
+      color: black;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+
+    textarea {
+      width: 100%;
+      height: 130px;
+      margin-top: 15px;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    .result {
+      font-size: 22px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-box">
+    <h1>Quiz zu Becks letzter Sommer</h1>
+    <p class="subtitle">Fragen zu meinem Schallplatten-Projekt</p>
+
+    <div id="quiz">
+      <div class="progress" id="progress"></div>
+      <div class="question" id="question"></div>
+      <div class="answers" id="answers"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Naechste Frage</button>
+    </div>
+
+    <div id="resultBox" style="display:none;">
+      <div class="result" id="result"></div>
+
+      <h2>Offene Abschlussfrage</h2>
+      <p>
+        Das Ende von <em>Becks letzter Sommer</em> bleibt offen. 
+        In meinem Projekt habe ich deshalb zwei moegliche Zukunftswege fuer Beck dargestellt.
+      </p>
+      <p>
+        Wie interpretierst du das Ende des Romans? Glaubst du, Beck findet mit Lara und der Musik sein Glueck,
+        oder siehst du eine andere Zukunft fuer ihn? Begruende deine Meinung in 2–3 Saetzen.
+      </p>
+
+      <textarea placeholder="Schreibe hier deine Meinung..."></textarea>
+
+      <button class="restart-btn" style="display:block;" onclick="restartQuiz()">Quiz neu starten</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Warum ist die Szene, in der Beck als Lehrer gezeigt wird, wichtig?",
+        answers: [
+          "Sie zeigt, dass Beck seinen Beruf liebt.",
+          "Sie zeigt, dass Beck mit seinem Leben unzufrieden ist und seine Leidenschaft fuer die Musik verloren hat.",
+          "Sie zeigt, dass Beck die Schule verlassen moechte.",
+          "Sie zeigt, dass Beck bereits mit Rauli befreundet ist."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum ist die Szene, in der Beck und Rauli gemeinsam Musik machen, wichtig?",
+        answers: [
+          "Sie zeigt, wie Beck durch Rauli wieder zur Musik findet.",
+          "Sie zeigt das Ende ihrer Freundschaft.",
+          "Sie zeigt, dass Rauli kein Talent hat.",
+          "Sie zeigt Becks Karriere als Lehrer."
+        ],
+        correct: 0
+      },
+      {
+        question: "Warum ist die Zugfahrt mit Lara nach Raito wichtig?",
+        answers: [
+          "Weil Beck dort ein Konzert spielt.",
+          "Weil Lara Beck hilft, schoene Erinnerungen wiederzuentdecken und wieder Freude am Leben zu finden.",
+          "Weil Rauli dort auf sie wartet.",
+          "Weil Beck dort einen Musikvertrag erhaelt."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum ist der Beginn der Reise in die Tuerkei wichtig?",
+        answers: [
+          "Weil die Figuren Ferien machen moechten.",
+          "Weil die Reise einen neuen Lebensabschnitt beginnt und die Figuren vor grosse Herausforderungen stellt.",
+          "Weil Beck aus Italien flieht.",
+          "Weil Charlie dort Musik studieren moechte."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum ist die Flucht aus Budapest wichtig?",
+        answers: [
+          "Weil sie zeigt, dass die Reise gefaehrlicher wird als erwartet.",
+          "Weil dort die Reise endet.",
+          "Weil Beck dort Lara trifft.",
+          "Weil Charlie dort verschwindet."
+        ],
+        correct: 0
+      },
+      {
+        question: "Warum ist Becks Halluzination wichtig?",
+        answers: [
+          "Weil sie zeigt, wie stark Beck durch Schuldgefuehle, Sorgen und Aengste belastet ist.",
+          "Weil Beck dadurch beruehmt wird.",
+          "Weil Rauli ihm die Halluzination zeigt.",
+          "Weil die Reise dort endet."
+        ],
+        correct: 0
+      },
+      {
+        question: "Warum ist die Ankunft bei Charlies Mutter wichtig?",
+        answers: [
+          "Weil Charlie dort ein Konzert gibt.",
+          "Weil Charlie sein Ziel erreicht und einen Teil seiner Aengste ueberwinden kann.",
+          "Weil Beck dort wohnen bleibt.",
+          "Weil die Reise dort beginnt."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum ist das Gespraech zwischen Beck und Rauli in Italien wichtig?",
+        answers: [
+          "Weil sie dort einen Vertrag unterschreiben.",
+          "Weil sie dort ueber ihre Erlebnisse und ihre Beziehung zueinander sprechen.",
+          "Weil sie sich dort zum ersten Mal treffen.",
+          "Weil Charlie dabei ist."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum habe ich die Schallplatte als Gestaltung meines Projekts gewaehlt?",
+        answers: [
+          "Weil Beck Schallplatten sammelt.",
+          "Weil Musik im Roman eine zentrale Rolle spielt und die Szenen miteinander verbindet.",
+          "Weil die Reise auf einer Schallplatte stattfindet.",
+          "Weil Schallplatten modern sind."
+        ],
+        correct: 1
+      },
+      {
+        question: "Warum habe ich zwei Strassen als Ende dargestellt?",
+        answers: [
+          "Weil Beck zwei Reisen macht.",
+          "Weil das Ende des Romans offen ist und verschiedene Zukunftswege moeglich sind.",
+          "Weil Rauli und Beck getrennt reisen.",
+          "Weil die Geschichte zwei Hauptfiguren hat."
+        ],
+        correct: 1
+      },
+      {
+        question: "Was symbolisiert die Halluzination in meiner Zeichnung?",
+        answers: [
+          "Becks Zukunft als Musiker.",
+          "Becks innere Konflikte und seinen emotionalen Tiefpunkt.",
+          "Einen Traum von Rauli.",
+          "Die Beziehung zu Lara."
+        ],
+        correct: 1
+      },
+      {
+        question: "Welche Aussage beschreibt meine Interpretation des positiven Endes am besten?",
+        answers: [
+          "Beck vergisst die Musik.",
+          "Beck kehrt zu Lara zurueck und schafft mit Raulis Melodie den musikalischen Durchbruch.",
+          "Beck reist alleine weiter.",
+          "Beck wird Lehrer in der Tuerkei."
+        ],
+        correct: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+
+    function showQuestion() {
+      answered = false;
+      document.getElementById("nextBtn").style.display = "none";
+      document.getElementById("progress").innerText = "Frage " + (currentQuestion + 1) + " von " + questions.length;
+      document.getElementById("question").innerText = questions[currentQuestion].question;
+
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "";
+
+      questions[currentQuestion].answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.innerText = answer;
+        button.onclick = () => checkAnswer(button, index);
+        answersDiv.appendChild(button);
+      });
+    }
+
+    function checkAnswer(button, index) {
+      if (answered) return;
+      answered = true;
+
+      const correctIndex = questions[currentQuestion].correct;
+      const buttons = document.querySelectorAll(".answers button");
+
+      if (index === correctIndex) {
+        button.classList.add("correct");
+        score++;
+      } else {
+        button.classList.add("wrong");
+        buttons[correctIndex].classList.add("correct");
+      }
+
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("resultBox").style.display = "block";
+      document.getElementById("result").innerText = 
+        "Du hast " + score + " von " + questions.length + " Punkten erreicht.";
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("resultBox").style.display = "none";
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+
+</body>
+</html>
